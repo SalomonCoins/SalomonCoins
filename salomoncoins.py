@@ -42,11 +42,12 @@ class Blockchain:
                  'proof':proof,
                  'previous_hash':previous_hash,
                  'transactions':self.transactions}
-        self.transactions=[]
+        self.transactions =[]
         self.chain.append(block)
         return block 
+    
     def add_transaction(self, sender, receiver, amount):
-        self.transaction.append({'sender':sender,
+        self.transactions.append({'sender':sender,
                                  'receiver':receiver,
                                  'amount':amount})
         previous_block = self.get_previous_block()
@@ -91,20 +92,19 @@ class Blockchain:
 
 app = Flask(__name__)
 
-
-
+node_address = str(uuid4()).replace('-',' ')
 
 blockchain = Blockchain()
 
-@app.route('/mine_block',methods=['GET'])
+@app.route('/mine_block', methods=['GET'])
 
 def mine_block():
     previous_block= blockchain.get_previous_block()
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender= node_address, receiver= 'Jorge', amount=1) //aqui puedes agregar el cliente
-    block = blockchain.create_block(proof, previous_hash)
+    blockchain.add_transaction(sender= node_address, receiver= 'Jorge', amount=1) #aqui puedes agregar el cliente
+    block = blockchain.create_block(proof,previous_hash)
     response = {"message":"Felicidades, has minado un bloque!",
                 'index':block['index'],
                 'timestamp':block['timestamp'],
@@ -132,7 +132,7 @@ def is_valid():
         response = {'message':'error, debes revisar'}
     return jsonify(response),200 
 
-app.run(host='0.0.0.0',port='5000')
+
 
 
 #agregando nueva transacion de blockchain
@@ -176,7 +176,7 @@ def replace_chain():
                     'actual_chain':blockchain.chain}
     return jsonify(response),200 
     
-node_address = str(uuid4()).replace('-',' ')
+
 app.run(host='0.0.0.0',port='5000')       
         
     
